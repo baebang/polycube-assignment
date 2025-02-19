@@ -7,12 +7,17 @@ import {
 } from 'react-native-google-mobile-ads';
 
 export default function Advertisement() {
+  //보안을 위해 환경변수로 지정
+  const iosKey: string | undefined = process.env.EXPO_PUBLIC_ADMOB_IOS_KEY;
+  const androidKey: string | undefined =
+    process.env.EXPO_PUBLIC_ADMOB_ANDROID_KEY;
+
   // 개발 환경에서는 테스트 광고 ID 사용, 실제 배포에서는 실제 광고 ID 사용
-  const adUnitId = __DEV__
+  const adUnitId: string = __DEV__
     ? TestIds.BANNER // 개발 중에는 테스트 광고 사용
     : Platform.OS === 'ios'
-      ? 'ca-app-pub-5694199503220828/7211174556' // 실제 iOS 광고 ID
-      : 'ca-app-pub-5694199503220828/7553083192'; // 실제 Android 광고 ID
+      ? (iosKey ?? '') // 실제 iOS 광고 ID
+      : (androidKey ?? ''); // 실제 Android 광고 ID
 
   return (
     <View style={styles.container}>
