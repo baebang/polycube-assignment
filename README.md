@@ -116,6 +116,8 @@ Bottom Navigation을 추가하여 content와 advertisement 탭을 이동할 수 
 ✅ 아이콘 및 스플래시 변경
 app.json에서 아이콘 및 스플래시 이미지 적용
 
+### 5️⃣ 보안을 위한 환경변수 지정
+환경 변수를 사용하여 광고 ID 보호
 
 
 
