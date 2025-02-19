@@ -3,7 +3,6 @@
 🚀 **프로젝트 개요**  
 `polycube-assignment`는 **React Native 기반의 모바일 애플리케이션**입니다.  
 **웹뷰(WebView) 기반의 컨텐츠 표시 기능**과 **광고 ID 조회 및 표시 기능**을 포함합니다.  
-iOS와 Android 모두 지원하며, 직관적인 UI/UX를 제공하는 것이 목표입니다.  
 
 🔗 **DownLode**: [polycube-assignment]([https://github.com/baebang/polycube-assignment](https://expo.dev/accounts/jaejungkim/projects/polycubeAssignment/builds/950936bf-c470-493e-8da0-ea1a6cc9a495))
 
