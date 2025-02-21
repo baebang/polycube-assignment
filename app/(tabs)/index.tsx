@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, Platform, Alert } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { TestIds } from 'react-native-google-mobile-ads';
 
 const Index = () => {
   const webViewRef = useRef<WebView>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // 광고 ID를 환경 변수에서 불러오기
   const iosKey: string | undefined = process.env.EXPO_PUBLIC_ADMOB_IOS_KEY;
@@ -19,10 +20,12 @@ const Index = () => {
       : (androidKey ?? ''); // 실제 Android 광고 ID
 
   useEffect(() => {
-    // 광고 ID를 웹 페이지에 전달하는 JavaScript 코드 생성
     if (webViewRef.current) {
-      const jsCode = `window.postMessage(${JSON.stringify(adUnitId)}, "*");`;
-      webViewRef.current.injectJavaScript(jsCode);
+      const sendData = JSON.stringify({
+        type: 'adUnitId',
+        content: adUnitId,
+      });
+      webViewRef.current.postMessage(JSON.stringify(sendData)); // adUnitId를 웹뷰로 전송
     }
   }, [adUnitId]);
 
@@ -30,13 +33,19 @@ const Index = () => {
     <View style={styles.container}>
       <WebView
         ref={webViewRef}
-        source={{ uri: 'https://polycube-web.vercel.app' }}
+        source={{ uri: 'https://polycube-web.vercel.app/' }}
         style={styles.webview}
         javaScriptEnabled={true}
         domStorageEnabled={true}
         startInLoadingState={true}
-        onMessage={(event) => {
-          console.log('Message from web:', event.nativeEvent.data);
+        onLoad={(e) => {
+          if (webViewRef.current) {
+            const sendData = JSON.stringify({
+              type: 'adUnitId',
+              message: adUnitId,
+            });
+            webViewRef.current.postMessage(JSON.stringify(sendData)); // adUnitId를 웹뷰로 전송
+          }
         }}
       />
     </View>
