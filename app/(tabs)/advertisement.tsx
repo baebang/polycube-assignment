@@ -25,11 +25,15 @@ export default function Advertisement() {
       <View style={styles.adContainer}>
         <BannerAd
           unitId={adUnitId}
-          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} // 광고 크기 (반응형)
+          size={BannerAdSize.WIDE_SKYSCRAPER} // 광고 크기 (반응형)
           requestOptions={{
             requestNonPersonalizedAdsOnly: true, // 비개인화 광고 요청
             networkExtras: { collapsible: 'bottom' }, // 광고가 화면에 자연스럽게 배치되도록 설정
           }}
+          onAdLoaded={() => console.log('광고 로드 완료')}
+          onAdFailedToLoad={(error) => console.log('광고 로드 실패: ', error)}
+          onAdOpened={() => console.log('광고 열림')}
+          onAdClosed={() => console.log('광고 닫힘')}
         />
       </View>
     </View>

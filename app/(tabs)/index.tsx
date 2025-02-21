@@ -1,21 +1,43 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
 import { WebView } from 'react-native-webview';
+import { TestIds } from 'react-native-google-mobile-ads';
 
 const Index = () => {
+  const webViewRef = useRef<WebView>(null);
+
+  // 광고 ID를 환경 변수에서 불러오기
+  const iosKey: string | undefined = process.env.EXPO_PUBLIC_ADMOB_IOS_KEY;
+  const androidKey: string | undefined =
+    process.env.EXPO_PUBLIC_ADMOB_ANDROID_KEY;
+
+  // 개발 환경에서는 테스트 광고 ID 사용, 실제 배포에서는 실제 광고 ID 사용
+  const adUnitId: string = __DEV__
+    ? TestIds.BANNER // 개발 중에는 테스트 광고 사용
+    : Platform.OS === 'ios'
+      ? (iosKey ?? '') // 실제 iOS 광고 ID
+      : (androidKey ?? ''); // 실제 Android 광고 ID
+
+  useEffect(() => {
+    // 광고 ID를 웹 페이지에 전달하는 JavaScript 코드 생성
+    if (webViewRef.current) {
+      const jsCode = `window.postMessage(${JSON.stringify(adUnitId)}, "*");`;
+      webViewRef.current.injectJavaScript(jsCode);
+    }
+  }, [adUnitId]);
+
   return (
     <View style={styles.container}>
       <WebView
+        ref={webViewRef}
         source={{ uri: 'https://polycube-web.vercel.app' }}
         style={styles.webview}
-        javaScriptEnabled={true} // JavaScript 실행 허용
-        domStorageEnabled={true} // 웹페이지의 DOM 저장소 사용 허용
-        scalesPageToFit={true} // 페이지 크기 자동 조정
-        startInLoadingState={true} // 페이지 로드 시 로딩 인디케이터 표시
-        allowsFullscreenVideo={true} // 전체 화면 동영상 재생 허용
-        setBuiltInZoomControls={true} // 확대/축소 버튼 추가 (Android 전용)
-        setDisplayZoomControls={false} // 줌 컨트롤 UI 숨김 (Android)
-        allowsBackForwardNavigationGestures={true} // iOS에서 뒤로가기 제스처 허용
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        startInLoadingState={true}
+        onMessage={(event) => {
+          console.log('Message from web:', event.nativeEvent.data);
+        }}
       />
     </View>
   );
